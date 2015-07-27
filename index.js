@@ -77,12 +77,12 @@ function getCurrentNetworkName( device ){
 
 function connectToNetwork( device ){
     if( process.platform === 'win32' ){
-        shell.exec( 'netsh wlan connect name=' + shellescape( network.ssid ) );
+        shell.exec( 'netsh wlan connect name=' + shellescape( network.ssid ), { silent: true } );
     } else {
         if( network.password ){
-            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ) + ' ' + network.password );
+            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ) + ' ' + network.password, { silent: true } );
         } else {
-            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ) );
+            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ), { silent: true } );
         }
     }
 }
