@@ -52,14 +52,31 @@ function throwError( error ) {
     process.exit( -1 )
 }
 
+function addLogLine( line ){
+    log.log( line );
+    screen.render();
+}
+
 function loadQuota(){
-    network.shouldRefresh( function( doRefresh, percentUsed ){
-        if( doRefresh ){
-            log.log( 'Limit reached, refreshing mac' );
+    network.shouldRefresh( function( error, response ){
+        if( error ){
+            // Temporary workaround until I figure out how to throw errors
+            // when we have a screen
+            addLogLine( error.message );
+
+            setTimeout( function(){
+                throwError( error );
+            }, 5000 );
+
+            return false;
+        }
+
+        if( response.doRefresh ){
+            addLogLine( 'Limit reached, refreshing mac' );
             refreshMac( device );
         }
 
-        gauge.setPercent( percentUsed );
+        gauge.setPercent( response.percentUsed );
         screen.render();
     });
 }
@@ -106,7 +123,7 @@ function refreshMac( device ){
 
     connectToNetwork( device );
 
-    log.log( 'New mac is ' + mac );
+    addLogLine( 'New mac is ' + mac );
 }
 
 function start(){
@@ -118,6 +135,8 @@ function start(){
         return process.exit( 0 );
     });
 
+    screen.title = 'Wifi Unlimiter';
+
     screen.append( gauge );
     screen.append( log );
 
@@ -127,22 +146,23 @@ function start(){
         throwError( new Error( 'Unable to find module "' + argv.network + '" in ./modules/' ) );
     }
 
-    if( argv.connect ){
-        if( network.requiresPassword ){
-            if( !argv.password ){
-                throwError( new Error( 'This network requires a password. Please pass it with the --password parameter' ) );
-            }
-
-            network.password = argv.password;
+    if( network.requiresPassword ){
+        if( !argv.password ){
+            throwError( new Error( 'This network requires a password. Please pass it with the --password parameter' ) );
         }
 
+        network.password = argv.password;
+    }
+
+    // If not already connected, connect to the network
+    if( getCurrentNetworkName( device ) !== network.ssid ){
         connectToNetwork( device );
     }
 
-    log.log( 'Module ' + argv.network + ' loaded' );
+    addLogLine( 'Module ' + argv.network + ' loaded' );
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
-        throwError( new Error( 'Not connected to the correct network. Please connect to "' + network.ssid + '" or pass in --connect' ) );
+        throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
     }
 
     loadQuota();
@@ -152,8 +172,7 @@ function start(){
 }
 
 module.exports = {
-    log: log.log,
-    throwError: throwError
+    log: addLogLine
 };
 
 start();

@@ -28,17 +28,30 @@ var request = require( 'request' );
 module.exports = {
     ssid: 'SJ',
     percentageLimit: 95,
+    quotaFails: 0,
+    quotaFailLimit: 5,
     shouldRefresh: function( callback ){
         var percentage,
             _this = this;
 
         request( 'http://www.ombord.info/api/jsonp/user/?callback=data&_' + Date.now(), function( error, response, data ){
-            if( error ){
-                // We should probably do something here
-                // exports.log doesn't seem to work for some reason, it's not really needed anyway
-                // module.parent.exports.log( 'Unable to load quota' );
-                return false;
+            var retriesRemaining;
+
+            if( error || response.statusCode !== 200 ){
+                _this.quotaFails = _this.quotaFails + 1;
+                retriesRemaining = _this.quotaFailLimit - _this.quotaFails;
+
+                if( retriesRemaining <= 0 ){
+                    callback( new Error( 'Failed to load quota. Tried ' + _this.quotaFails + ' times without success' ), null );
+                    return false;
+                } else {
+                    module.parent.exports.log( 'Unable to load quota. Tries remaining: ' + retriesRemaining );
+                    return false;
+                }
             }
+
+            // Got quota, let's reset the fail counter
+            _this.quotaFails = 0;
 
             // Make sure there is no newlines or spaces or anything
             data.trim();
@@ -54,9 +67,15 @@ module.exports = {
             percentage = Math.round( data.data_total_used / data.data_total_limit * 100 );
 
             if( percentage >= _this.percentageLimit ){
-                callback( true, percentage );
+                callback( null, {
+                    doRefresh: true,
+                    percentUsed: percentage
+                });
             } else {
-                callback( false, percentage );
+                callback( null, {
+                    doRefresh: false,
+                    percentUsed: percentage
+                });
             }
         });
     }
