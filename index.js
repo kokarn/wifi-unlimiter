@@ -122,6 +122,8 @@ function start(){
         return process.exit( 0 );
     });
 
+    screen.title = 'Wifi Unlimiter';
+
     screen.append( gauge );
     screen.append( log );
 
