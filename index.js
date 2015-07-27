@@ -33,7 +33,7 @@ var log = grid.set( 2, 0, 10, 12, contrib.log, {
 });
 
 var device = 'en0',
-    loader;
+    network;
 
 function setMACAddress( device, mac, port ) {
     try {
@@ -53,20 +53,41 @@ function throwError( error ) {
 }
 
 function loadQuota(){
-    loader.shouldRefresh( function( doRefresh, percentUsed ){
+    network.shouldRefresh( function( doRefresh, percentUsed ){
         if( doRefresh ){
             log.log( 'Limit reached, refreshing mac' );
-            refreshMac( device, loader.network );
+            refreshMac( device );
         }
-
-        console.log( doRefresh );
 
         gauge.setPercent( percentUsed );
         screen.render();
     });
 }
 
-function refreshMac( device, network ){
+function getCurrentNetworkName( device ){
+    if( process.platform === 'win32' ){
+        // Probably something like this, need a windows machine to test on
+        //shell.exec( 'netsh wlan show all', { silent: true } ).output.trim();
+
+        return false;
+    } else {
+        return shell.exec( 'networksetup -getairportnetwork ' + device + ' | cut -c 24-', { silent: true } ).output.trim();
+    }
+}
+
+function connectToNetwork( device ){
+    if( process.platform === 'win32' ){
+        shell.exec( 'netsh wlan connect name=' + shellescape( network.ssid ), { silent: true } );
+    } else {
+        if( network.password ){
+            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ) + ' ' + network.password, { silent: true } );
+        } else {
+            shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ), { silent: true } );
+        }
+    }
+}
+
+function refreshMac( device ){
     var it,
         mac;
 
@@ -83,12 +104,7 @@ function refreshMac( device, network ){
     mac = spoof.random();
     setMACAddress( it.device, mac, it.port );
 
-    // Connect to network again
-    if( process.platform === 'win32' ){
-        shell.exec( 'netsh wlan connect name=' + shellescape( network ) );
-    } else {
-        shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network ) );
-    }
+    connectToNetwork( device );
 
     log.log( 'New mac is ' + mac );
 }
@@ -106,12 +122,28 @@ function start(){
     screen.append( log );
 
     try {
-        loader = require( './modules/' + argv.network + '.js' );
+        network = require( './modules/' + argv.network + '.js' );
     } catch( error ){
         throwError( new Error( 'Unable to find module "' + argv.network + '" in ./modules/' ) );
     }
 
+    if( argv.connect ){
+        if( network.requiresPassword ){
+            if( !argv.password ){
+                throwError( new Error( 'This network requires a password. Please pass it with the --password parameter' ) );
+            }
+
+            network.password = argv.password;
+        }
+
+        connectToNetwork( device );
+    }
+
     log.log( 'Module ' + argv.network + ' loaded' );
+
+    if( getCurrentNetworkName( device ) !== network.ssid ){
+        throwError( new Error( 'Not connected to the correct network. Please connect to "' + network.ssid + '" or pass in --connect' ) );
+    }
 
     loadQuota();
 
