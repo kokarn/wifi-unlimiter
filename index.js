@@ -141,6 +141,7 @@ function start(){
     }
 
     log.log( 'Module ' + argv.network + ' loaded' );
+    screen.render();
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
         throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
