@@ -64,6 +64,17 @@ function loadQuota(){
     });
 }
 
+function getCurrentNetworkName( device ){
+    if( process.platform === 'win32' ){
+        // Probably something like this, need a windows machine to test on
+        //shell.exec( 'netsh wlan show all', { silent: true } ).output;
+
+        return false;
+    } else {
+        return shell.exec( 'networksetup -getairportnetwork ' + device + ' | cut -c 24-', { silent: true } ).output;
+    }
+}
+
 function refreshMac( device, network ){
     var it,
         mac;
@@ -110,6 +121,10 @@ function start(){
     }
 
     log.log( 'Module ' + argv.network + ' loaded' );
+
+    if( getCurrentNetworkName( device ) !== loader.network ){
+        throwError( new Error( 'Not connected to the correct network. Please connect to "' + loader.network + '"' ) );
+    }
 
     loadQuota();
 
