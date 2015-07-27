@@ -52,10 +52,14 @@ function throwError( error ) {
     process.exit( -1 )
 }
 
+function addLogLine( line ){
+    log.log( line );
+}
+
 function loadQuota(){
     network.shouldRefresh( function( doRefresh, percentUsed ){
         if( doRefresh ){
-            log.log( 'Limit reached, refreshing mac' );
+            addLogLine( 'Limit reached, refreshing mac' );
             refreshMac( device );
         }
 
@@ -106,7 +110,7 @@ function refreshMac( device ){
 
     connectToNetwork( device );
 
-    log.log( 'New mac is ' + mac );
+    addLogLine( 'New mac is ' + mac );
 }
 
 function start(){
@@ -140,7 +144,7 @@ function start(){
         connectToNetwork( device );
     }
 
-    log.log( 'Module ' + argv.network + ' loaded' );
+    addLogLine( 'Module ' + argv.network + ' loaded' );
     screen.render();
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
@@ -154,7 +158,7 @@ function start(){
 }
 
 module.exports = {
-    log: log.log,
+    log: addLogLine,
     throwError: throwError
 };
 
