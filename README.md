@@ -26,12 +26,6 @@ where $NETWORK is the name of the limited network. duh.
 sudo node index.js --network=SJ
 ```
 
-If you want to automatically connect to the network if not already connected, pass in ```--connect```
-
-```shell
-sudo node index.js --network=SJ --connect
-```
-
 If the network requires a password, pass that along with ```--password```
 
 ```shell

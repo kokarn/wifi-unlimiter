@@ -127,22 +127,23 @@ function start(){
         throwError( new Error( 'Unable to find module "' + argv.network + '" in ./modules/' ) );
     }
 
-    if( argv.connect ){
-        if( network.requiresPassword ){
-            if( !argv.password ){
-                throwError( new Error( 'This network requires a password. Please pass it with the --password parameter' ) );
-            }
-
-            network.password = argv.password;
+    if( network.requiresPassword ){
+        if( !argv.password ){
+            throwError( new Error( 'This network requires a password. Please pass it with the --password parameter' ) );
         }
 
+        network.password = argv.password;
+    }
+
+    // If not already connected, connect to the network
+    if( getCurrentNetworkName( device ) !== network.ssid ){
         connectToNetwork( device );
     }
 
     log.log( 'Module ' + argv.network + ' loaded' );
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
-        throwError( new Error( 'Not connected to the correct network. Please connect to "' + network.ssid + '" or pass in --connect' ) );
+        throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
     }
 
     loadQuota();
