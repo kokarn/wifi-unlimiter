@@ -56,7 +56,7 @@ function loadQuota(){
     network.shouldRefresh( function( doRefresh, percentUsed ){
         if( doRefresh ){
             log.log( 'Limit reached, refreshing mac' );
-            refreshMac( device, network.network );
+            refreshMac( device, network.name );
         }
 
         gauge.setPercent( percentUsed );
