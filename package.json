@@ -1,0 +1,22 @@
+{
+  "name": "wifi-unlimited",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oskar Risberg <kokarn@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "blessed": "^0.1.7",
+    "chalk": "^1.1.0",
+    "escapeshellarg": "^0.1.0",
+    "minimist": "^1.1.2",
+    "prettysize": "0.0.3",
+    "request": "^2.58.0",
+    "shelljs": "^0.5.1",
+    "spoof": "^1.0.1",
+    "zero-fill": "^2.2.1"
+  }
+}
