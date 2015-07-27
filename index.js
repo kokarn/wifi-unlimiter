@@ -33,7 +33,7 @@ var log = grid.set( 2, 0, 10, 12, contrib.log, {
 });
 
 var device = 'en0',
-    loader;
+    network;
 
 function setMACAddress( device, mac, port ) {
     try {
@@ -53,10 +53,10 @@ function throwError( error ) {
 }
 
 function loadQuota(){
-    loader.shouldRefresh( function( doRefresh, percentUsed ){
+    network.shouldRefresh( function( doRefresh, percentUsed ){
         if( doRefresh ){
             log.log( 'Limit reached, refreshing mac' );
-            refreshMac( device, loader.network );
+            refreshMac( device, network.network );
         }
 
         gauge.setPercent( percentUsed );
@@ -115,15 +115,16 @@ function start(){
     screen.append( log );
 
     try {
-        loader = require( './modules/' + argv.network + '.js' );
+        network = require( './modules/' + argv.network + '.js' );
     } catch( error ){
         throwError( new Error( 'Unable to find module "' + argv.network + '" in ./modules/' ) );
     }
 
     log.log( 'Module ' + argv.network + ' loaded' );
 
-    if( getCurrentNetworkName( device ) !== loader.network ){
-        throwError( new Error( 'Not connected to the correct network. Please connect to "' + loader.network + '"' ) );
+
+    if( getCurrentNetworkName( device ) !== network.name ){
+        throwError( new Error( 'Not connected to the correct network. Please connect to "' + network.name + '"' ) );
     }
 
     loadQuota();
