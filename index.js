@@ -54,6 +54,7 @@ function throwError( error ) {
 
 function addLogLine( line ){
     log.log( line );
+    screen.render();
 }
 
 function loadQuota(){
@@ -147,7 +148,6 @@ function start(){
     }
 
     addLogLine( 'Module ' + argv.network + ' loaded' );
-    screen.render();
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
         throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
