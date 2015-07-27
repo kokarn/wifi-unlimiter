@@ -26,7 +26,7 @@ data({
 var request = require( 'request' );
 
 module.exports = {
-    name: 'SJ',
+    ssid: 'SJ',
     percentageLimit: 95,
     shouldRefresh: function( callback ){
         var percentage,
