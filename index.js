@@ -58,13 +58,25 @@ function addLogLine( line ){
 }
 
 function loadQuota(){
-    network.shouldRefresh( function( doRefresh, percentUsed ){
-        if( doRefresh ){
+    network.shouldRefresh( function( error, response ){
+        if( error ){
+            // Temporary workaround until I figure out how to throw errors
+            // when we have a screen
+            addLogLine( error.message );
+
+            setTimeout( function(){
+                throwError( error );
+            }, 5000 );
+
+            return false;
+        }
+
+        if( response.doRefresh ){
             addLogLine( 'Limit reached, refreshing mac' );
             refreshMac( device );
         }
 
-        gauge.setPercent( percentUsed );
+        gauge.setPercent( response.percentUsed );
         screen.render();
     });
 }
@@ -160,8 +172,7 @@ function start(){
 }
 
 module.exports = {
-    log: addLogLine,
-    throwError: throwError
+    log: addLogLine
 };
 
 start();
