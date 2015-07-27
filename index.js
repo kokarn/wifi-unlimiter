@@ -59,8 +59,6 @@ function loadQuota(){
             refreshMac( device, loader.network );
         }
 
-        console.log( doRefresh );
-
         gauge.setPercent( percentUsed );
         screen.render();
     });
