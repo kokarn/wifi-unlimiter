@@ -8,6 +8,7 @@
   },
   "author": "Oskar Risberg <kokarn@gmail.com>",
   "license": "MIT",
+  "repository": "https://github.com/kokarn/wifi-unlimiter.git",
   "dependencies": {
     "blessed": "^0.1.7",
     "chalk": "^1.1.0",
