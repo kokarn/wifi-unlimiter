@@ -159,6 +159,7 @@ function start(){
     // If not already connected, connect to the network
     if( getCurrentNetworkName( device ) !== network.ssid ){
         connectToNetwork( device );
+        addLogLine( 'Connected to network ' + network.ssid );
     }
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
