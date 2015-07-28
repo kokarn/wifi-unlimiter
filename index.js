@@ -35,6 +35,12 @@ var log = grid.set( 2, 0, 10, 12, contrib.log, {
 var device = 'en0',
     network;
 
+/**
+* Set MAC address for the specified device interface
+* @param {string} device
+* @param {string} mac
+* @param {string} port
+*/
 function setMACAddress( device, mac, port ) {
     try {
         spoof.setInterfaceMAC( device, mac, port );
@@ -45,18 +51,25 @@ function setMACAddress( device, mac, port ) {
 
 /**
 * Print error and terminate the program
-* @param  {Error} err
+* @param {Error} error
 */
 function throwError( error ) {
     console.error( chalk.red( 'Error:', error.message ) );
     process.exit( -1 )
 }
 
+/**
+* Add a line to the Action log
+* @param {string} line
+*/
 function addLogLine( line ){
     log.log( line );
     screen.render();
 }
 
+/**
+* Load quota usage from the network provider
+*/
 function loadQuota(){
     network.shouldRefresh( function( error, response ){
         if( error ){
@@ -81,6 +94,10 @@ function loadQuota(){
     });
 }
 
+/**
+* Get SSID of the current network for the requested device
+* @param {string} device
+*/
 function getCurrentNetworkName( device ){
     if( process.platform === 'win32' ){
         // Probably something like this, need a windows machine to test on
@@ -92,6 +109,10 @@ function getCurrentNetworkName( device ){
     }
 }
 
+/**
+* Connect the specified device to the selected network
+* @param {string} device
+*/
 function connectToNetwork( device ){
     if( process.platform === 'win32' ){
         shell.exec( 'netsh wlan connect name=' + shellescape( network.ssid ), { silent: true } );
@@ -104,6 +125,10 @@ function connectToNetwork( device ){
     }
 }
 
+/**
+* Refresh MAC address for the specified device
+* @param {string} device
+*/
 function refreshMac( device ){
     var it,
         mac;
@@ -126,6 +151,9 @@ function refreshMac( device ){
     addLogLine( 'New mac is ' + mac );
 }
 
+/**
+* Start the application
+*/
 function start(){
     if( process.platform !== 'win32' && process.getuid() !== 0 ){
         throwError( new Error( 'Must run as root (or using sudo) to change network settings' ) );
