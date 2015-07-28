@@ -154,12 +154,12 @@ function start(){
         network.password = argv.password;
     }
 
+    addLogLine( 'Module ' + argv.network + ' loaded' );
+
     // If not already connected, connect to the network
     if( getCurrentNetworkName( device ) !== network.ssid ){
         connectToNetwork( device );
     }
-
-    addLogLine( 'Module ' + argv.network + ' loaded' );
 
     if( getCurrentNetworkName( device ) !== network.ssid ){
         throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
