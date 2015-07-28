@@ -12,7 +12,6 @@ var contrib = require( 'blessed-contrib' );
 var shellescape = require( 'escapeshellarg' );
 var argv = require( 'minimist' )( process.argv.slice( 2 ) );
 var screen = blessed.screen();
-var gauge = contrib.gauge();
 var grid = new contrib.grid({
     rows: 12,
     cols: 12,
