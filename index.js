@@ -11,7 +11,11 @@ var blessed = require( 'blessed' );
 var contrib = require( 'blessed-contrib' );
 var shellescape = require( 'escapeshellarg' );
 var argv = require( 'minimist' )( process.argv.slice( 2 ) );
-var screen = blessed.screen();
+
+var screen = blessed.screen({
+    smartCSR: true
+});
+
 var grid = new contrib.grid({
     rows: 12,
     cols: 12,
