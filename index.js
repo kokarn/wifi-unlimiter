@@ -57,8 +57,7 @@ function setMACAddress( device, mac, port ) {
 * @param {Error} error
 */
 function throwError( error ) {
-    console.error( chalk.red( 'Error:', error.message ) );
-    process.exit( -1 )
+    throw chalk.red( 'Error: ' + error.message );
 }
 
 /**
@@ -76,13 +75,7 @@ function addLogLine( line ){
 function loadQuota(){
     network.shouldRefresh( function( error, response ){
         if( error ){
-            // Temporary workaround until I figure out how to throw errors
-            // when we have a screen
-            addLogLine( error.message );
-
-            setTimeout( function(){
-                throwError( error );
-            }, 5000 );
+            throwError( error );
 
             return false;
         }
