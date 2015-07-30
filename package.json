@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": "https://github.com/kokarn/wifi-unlimiter.git",
   "dependencies": {
-    "blessed": "^0.1.7",
+    "blessed": "^0.1.17",
     "blessed-contrib": "^2.3.2",
     "chalk": "^1.1.0",
     "escapeshellarg": "^0.1.0",
