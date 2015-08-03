@@ -196,8 +196,6 @@ function start(){
     setInterval( loadQuota, 10000 );
 }
 
-module.exports = {
-    log: addLogLine
-};
+module.exports = addLogLine;
 
 start();

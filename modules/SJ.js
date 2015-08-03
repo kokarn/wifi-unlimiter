@@ -24,6 +24,7 @@ data({
 */
 
 var request = require( 'request' );
+var log = require( '../index.js' );
 
 module.exports = {
     ssid: 'SJ',
@@ -45,7 +46,7 @@ module.exports = {
                     callback( new Error( 'Failed to load quota. Tried ' + _this.quotaFails + ' times without success' ), null );
                     return false;
                 } else {
-                    module.parent.exports.log( 'Unable to load quota. Tries remaining: ' + retriesRemaining );
+                    log( 'Unable to load quota. Tries remaining: ' + retriesRemaining );
                     return false;
                 }
             }
