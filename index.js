@@ -11,6 +11,7 @@ var blessed = require( 'blessed' );
 var contrib = require( 'blessed-contrib' );
 var shellescape = require( 'escapeshellarg' );
 var argv = require( 'minimist' )( process.argv.slice( 2 ) );
+var moment = require( 'moment' );
 
 var screen = blessed.screen({
     smartCSR: true
@@ -65,6 +66,7 @@ function throwError( error ) {
 * @param {string} line
 */
 function addLogLine( line ){
+    line = '[' + moment().format( 'HH:mm' ) + '] ' + line;
     log.log( line );
     screen.render();
 }
