@@ -55,11 +55,18 @@ module.exports = {
             _this.quotaFails = 0;
 
             // Make sure there is no newlines or spaces or anything
-            data.trim();
+            data = data.trim();
 
-            // Strip the JSONP stuff, we really don't need it
+            // Strip the JSONP stuff, we don't need it
             data = data.substr( 5 ); // Strip "data("
-            data = data.substr( 0, data.length - 2 ); // Strip the final ");"
+
+            // Sometimes it might have a final ";"
+            // If it does, strip that and the final ")"
+            if( data.substr( -1 ) === ';' ){
+                data = data.substr( 0, data.length - 2 );
+            } else {
+                data = data.substr( 0, data.length - 1 );
+            }
 
             // Should be raw JSON now
             data = JSON.parse( data );
