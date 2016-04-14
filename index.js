@@ -24,15 +24,21 @@ var PATH_TO_AIRPORT = '/System/Library/PrivateFrameworks/Apple80211.framework/Re
 // Example: 00-00-00-00-00-00 or 00:00:00:00:00:00 or 000000000000
 var MAC_ADDRESS_RE = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/i
 
-var device = 'en0',
-    network;
+var device = 'en0';
+var network;
+var debug = false;
 
 // Get vars for widgets
 var grid,
     gauge,
     log,
     list,
-    message;
+    message,
+    debugLog;
+
+if( process.argv.indexOf( '--debug' ) > -1 ){
+    debug = true;
+}
 
 /**
 * Set MAC address for the specified device interface
@@ -263,15 +269,21 @@ function initNetworkList(){
     var networks = getCompatibleNetworks(),
         networkNames = Object.keys( networks );
 
+    /*
     if( networkNames.length <= 0 ){
         displayErrorBox( 'No compatible networks in range' );
 
         return false;
     }
+    */
 
     initGrid();
 
-    list = grid.set( 2, 4, 8, 4, blessed.list, {
+    if( debug ){
+        initDebugWindow();
+    }
+
+    list = grid.set( 2, 4, 6, 4, blessed.list, {
         label: 'Available networks',
         keys: true,
         style: {
@@ -291,6 +303,20 @@ function initNetworkList(){
     screen.render();
 
     list.focus();
+}
+
+function addDebugMessage( message ){
+    debugLog.addItem( message );
+    screen.render();
+}
+
+function initDebugWindow(){
+    debugLog = grid.set( 8, 0, 4, 12, blessed.list, {
+        label: 'Debug'
+    });
+
+    screen.append( debugLog );
+    screen.render();
 }
 
 function initNetwork( ssid ){
