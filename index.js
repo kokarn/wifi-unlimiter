@@ -269,13 +269,11 @@ function initNetworkList(){
     var networks = getCompatibleNetworks(),
         networkNames = Object.keys( networks );
 
-    /*
     if( networkNames.length <= 0 ){
         displayErrorBox( 'No compatible networks in range' );
 
         return false;
     }
-    */
 
     initGrid();
 
