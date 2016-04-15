@@ -304,7 +304,14 @@ function initNetworkList(){
 }
 
 function addDebugMessage( message ){
-    debugLog.addItem( message );
+    if( Array.isArray( message ) ){
+        for( var i = 0; i < message.length; i = i + 1 ){
+            debugLog.addItem( message[ i ] );
+        }
+    } else {
+        debugLog.addItem( message );
+    }
+
     screen.render();
 }
 
