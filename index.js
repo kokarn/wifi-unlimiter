@@ -341,10 +341,10 @@ function initNetwork( ssid ){
     if( getCurrentNetworkName( device ) !== network.ssid ){
         connectToNetwork( device );
         addLogLine( 'Connected to network ' + network.ssid );
-    }
 
-    if( getCurrentNetworkName( device ) !== network.ssid ){
-        throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
+        if( getCurrentNetworkName( device ) !== network.ssid ){
+            throwError( new Error( 'Unable to connect to network "' + network.ssid + '". Are you sure it\'s available?' ) );
+        }
     }
 
     loadQuota();
