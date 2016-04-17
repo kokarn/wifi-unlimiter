@@ -19,7 +19,7 @@
     "prettysize": "0.0.3",
     "request": "^2.58.0",
     "shelljs": "^0.5.1",
-    "spoof": "^1.0.1",
+    "spoof": "^1.1.0",
     "zero-fill": "^2.2.1"
   }
 }

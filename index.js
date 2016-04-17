@@ -28,6 +28,10 @@ var device = 'en0';
 var network;
 var debug = false;
 
+if( process.platform === 'win32' ){
+    device = 'Wireless Network Connection';
+}
+
 // Get vars for widgets
 var grid,
     gauge,
@@ -105,31 +109,48 @@ function isMac( mac ){
  * Get the currently avaialble networks
 */
 function getAvailableNetworks( device ){
-    var output = shell.exec( PATH_TO_AIRPORT + ' -s', { silent: true } ).output,
-        networks = output.split( '\n' ),
+    var output,
+        networks,
+        networkNames;
+
+    if( process.platform === 'win32' ){
+        output = shell.exec( 'netsh wlan show network', { silent: true } ).output;
+        networks = output.split( '\n' );
         networkNames = [];
 
-    networks.pop();
-    networks.shift();
+        for( var x = 0; x < networks.length; x = x + 1 ){
+            var ssidMatch = /SSID\s\d+\s\:\s(.*)/gim.exec( networks[ x ] );
+            if( ssidMatch && ssidMatch[ 1 ] ){
+                networkNames.push( ssidMatch[ 1 ].trim() );
+            }
+        }
+    } else {
+        output = shell.exec( PATH_TO_AIRPORT + ' -s', { silent: true } ).output;
+        networks = output.split( '\n' );
+        networkNames = [];
 
-    for( var i = 0; i < networks.length; i = i + 1 ){
-        var parts = networks[ i ].split( ' ' ),
+        networks.pop();
+        networks.shift();
+
+        for( var i = 0; i < networks.length; i = i + 1 ){
+            var parts = networks[ i ].split( ' ' ),
             networkName = '';
 
-        for( var x = 0; x < parts.length; x = x + 1 ){
-            if( parts[ x ].length <= 0 ){
-                continue;
+            for( var x = 0; x < parts.length; x = x + 1 ){
+                if( parts[ x ].length <= 0 ){
+                    continue;
+                }
+
+                // We've reached the BSSID part of the network
+                if( isMac( parts[ x ] ) ){
+                    break;
+                }
+
+                networkName = networkName + parts[ x ] + ' ';
             }
 
-            // We've reached the BSSID part of the network
-            if( isMac( parts[ x ] ) ){
-                break;
-            }
-
-            networkName = networkName + parts[ x ] + ' ';
+            networkNames.push( networkName.trim() );
         }
-
-        networkNames.push( networkName.trim() );
     }
 
     return networkNames;
@@ -141,8 +162,15 @@ function getAvailableNetworks( device ){
 */
 function getCurrentNetworkName( device ){
     if( process.platform === 'win32' ){
-        // Probably something like this, need a windows machine to test on
-        //shell.exec( 'netsh wlan show all', { silent: true } ).output.trim();
+        var output = shell.exec( 'netsh wlan show interface', { silent: true } ).output;
+        var parts = output.split( '\n' );
+
+        for( var x = 0; x < parts.length; x = x + 1 ){
+            var matches = /SSID\s*\:(.*)/gim.exec( parts[ x ] );
+            if( matches && matches[ 1 ] ){
+                return matches[ 1 ].trim();
+            }
+        }
 
         return false;
     } else {
@@ -151,13 +179,52 @@ function getCurrentNetworkName( device ){
 }
 
 /**
+* Get a list of available profiles
+*/
+function getWindowsProfiles(){
+    var output;
+    var lines;
+    var profiles = [];
+
+    if( process.platform !== 'win32' ){
+        return false;
+    }
+
+    output = shell.exec( 'netsh wlan show profiles', { silent: true } ).output;
+    lines = output.split( '\n' );
+
+    for( var i = 0; i < lines.length; i = i + 1 ){
+        var matches = /All\sUser\sProfile\s*\:(.*)/gim.exec( lines[ i ] );
+
+        if( matches && matches[ 1 ] ){
+            profiles.push( matches[ 1 ].trim() );
+        }
+    }
+
+    return profiles;
+}
+
+/**
 * Connect the specified device to the selected network
 * @param {string} device
 */
 function connectToNetwork( device ){
     if( process.platform === 'win32' ){
-        // TODO: Add connect with password
-        shell.exec( 'netsh wlan connect name=' + shellescape( network.ssid ), { silent: true } );
+        var profiles = getWindowsProfiles();
+        var gotProfile = false;
+
+        for( var i = 0; i < profiles.length; i = i + 1 ){
+            if( profiles[ i ] === network.ssid ){
+                gotProfile = true;
+                break;
+            }
+        }
+
+        if( !gotProfile ){
+            throwError( new Error( 'Couldn\'t find profile for "' + network.ssid + '". Please connect to it once with auto-connect to create a profile.' ) );
+        }
+
+        shell.exec( 'netsh wlan connect name="' + network.ssid + '"', { silent: true } );
     } else {
         if( network.password ){
             shell.exec( 'networksetup -setairportnetwork ' + device + ' ' + shellescape( network.ssid ) + ' ' + network.password, { silent: true } );
