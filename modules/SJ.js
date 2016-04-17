@@ -71,8 +71,12 @@ module.exports = {
             // Should be raw JSON now
             data = JSON.parse( data );
 
+            if( Number( data.data_total_limit ) < 1 ){
+                data.data_total_limit = 1;
+            }
+
             // Get the percentage used
-            percentage = Math.round( data.data_total_used / data.data_total_limit * 100 );
+            percentage = Math.round( Number( data.data_total_used ) / Number( data.data_total_limit ) * 100 );
 
             if( percentage >= _this.percentageLimit ){
                 callback( null, {

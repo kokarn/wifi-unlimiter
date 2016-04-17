@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This is not used, just a simple fallback if you want to do it manually
+
+# Disconnect from current network
+sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -z
+sleep 1
+
+# Randomize a new mac
+newmac=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+sleep 1
+
+# Echo new mac
+echo New mac is $newmac
+
+# Set new mac
+sudo ifconfig en0 ether $newmac
+sleep 1
+
+# Connect to 'SJ' network again
+networksetup -setairportnetwork en0 SJ
+
+echo Mac is now set to
+ifconfig en0 |grep ether

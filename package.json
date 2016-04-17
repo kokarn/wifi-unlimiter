@@ -1,6 +1,6 @@
 {
   "name": "wifi-unlimiter",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,15 @@
   "repository": "https://github.com/kokarn/wifi-unlimiter.git",
   "dependencies": {
     "blessed": "^0.1.17",
-    "blessed-contrib": "^2.3.2",
+    "blessed-contrib": "^3.5.5",
     "chalk": "^1.1.0",
     "escapeshellarg": "^0.1.0",
     "minimist": "^1.1.2",
     "moment": "^2.10.6",
     "prettysize": "0.0.3",
     "request": "^2.58.0",
-    "shelljs": "^0.5.1",
-    "spoof": "^1.0.1",
+    "shelljs": "^0.6.0",
+    "spoof": "^1.1.0",
     "zero-fill": "^2.2.1"
   }
 }

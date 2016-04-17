@@ -32,9 +32,5 @@ If the network requires a password, pass that along with ```--password```
 sudo node index.js --network=SJ --password=myPassword
 ```
 
-## Known issues
-
-Due to a heavy dependency on [feross/spoof](https://github.com/feross/spoof#windows-support) there is no support for windows because it's not implemented there yet.
-
 # Disclaimer
 This might break the terms of use for a specific network. I take no responsibility for what you do with this. If you'r uncertain if it's allowed, don't use it.
