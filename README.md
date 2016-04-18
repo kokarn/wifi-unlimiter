@@ -15,21 +15,7 @@ npm install
 
 ## Usage
 ```shell
-sudo node index.js --network=$NETWORK
-```
-where $NETWORK is the name of the limited network. duh.
-
-
-#### Examples
-
-```shell
-sudo node index.js --network=SJ
-```
-
-If the network requires a password, pass that along with ```--password```
-
-```shell
-sudo node index.js --network=SJ --password=myPassword
+node index.js
 ```
 
 # Disclaimer
