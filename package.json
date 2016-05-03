@@ -14,6 +14,7 @@
     "blessed-contrib": "^3.5.5",
     "chalk": "^1.1.0",
     "escapeshellarg": "^0.1.0",
+    "is-elevated": "^1.0.0",
     "minimist": "^1.1.2",
     "moment": "^2.12.0",
     "prettysize": "0.0.3",

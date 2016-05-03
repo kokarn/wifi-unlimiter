@@ -12,6 +12,7 @@ var contrib = require( 'blessed-contrib' );
 var shellescape = require( 'escapeshellarg' );
 var argv = require( 'minimist' )( process.argv.slice( 2 ) );
 var moment = require( 'moment' );
+var isElevated = require( 'is-elevated' );
 
 var screen = blessed.screen({
     smartCSR: true
@@ -431,17 +432,23 @@ function initNetwork( ssid ){
 * Start the application
 */
 function start(){
-    if( process.platform !== 'win32' && process.getuid() !== 0 ){
-        throwError( new Error( 'Must run as root (or using sudo) to change network settings' ) );
-    }
+    isElevated( function ( error, elevated ) {
+        if( error ){
+            throwError( error );
+        }
 
-    screen.key( [ 'escape', 'q', 'C-c' ], function( ch, key ){
-        return process.exit( 0 );
+    	if( !elevated ){
+            throwError( new Error( 'Must run as admin (or using sudo) to change network settings' ) );
+        }
+
+        screen.key( [ 'escape', 'q', 'C-c' ], function( ch, key ){
+            return process.exit( 0 );
+        });
+
+        screen.title = 'Wifi Unlimiter';
+
+        initNetworkList();
     });
-
-    screen.title = 'Wifi Unlimiter';
-
-    initNetworkList();
 }
 
 module.exports = addLogLine;
