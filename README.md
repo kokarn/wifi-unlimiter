@@ -18,5 +18,8 @@ npm install
 node index.js
 ```
 
+### Options
+`--device` Pass the name of the device interface to use. Default is `en0` (won't be used on Windows).
+
 # Disclaimer
 This might break the terms of use for a specific network. I take no responsibility for what you do with this. If you'r uncertain if it's allowed, don't use it.

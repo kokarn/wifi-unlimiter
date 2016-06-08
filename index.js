@@ -24,7 +24,7 @@ var PATH_TO_AIRPORT = '/System/Library/PrivateFrameworks/Apple80211.framework/Re
 // Example: 00-00-00-00-00-00 or 00:00:00:00:00:00 or 000000000000
 var MAC_ADDRESS_RE = /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/i
 
-var device = 'en0';
+var device = argv.device || 'en0';
 var network;
 var debug = false;
 
