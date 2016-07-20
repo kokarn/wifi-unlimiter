@@ -29,7 +29,15 @@ var network;
 var debug = false;
 
 if( process.platform === 'win32' ){
-    device = 'Wireless Network Connection';
+    var output = shell.exec( 'ipconfig', { silent: true } ).output;
+    if( output.indexOf( 'Wireless Network Connection' ) > -1 ){
+        device = 'Wireless Network Connection';
+    } else if( output.indexOf( 'Wi-Fi' ) > -1 ){
+        device = 'Wi-Fi';
+    } else {
+        console.log( 'Unable to detect device. Please specify it with --device' );
+        process.exit( 1 );
+    }
 }
 
 // Get vars for widgets
