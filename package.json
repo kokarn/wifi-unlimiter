@@ -11,15 +11,15 @@
   "repository": "https://github.com/kokarn/wifi-unlimiter.git",
   "dependencies": {
     "blessed": "^0.1.17",
-    "blessed-contrib": "^3.5.5",
-    "chalk": "^1.1.0",
+    "blessed-contrib": "^4.8.5",
+    "chalk": "^2.4.1",
     "escapeshellarg": "^0.1.0",
     "minimist": "^1.1.2",
     "moment": "^2.12.0",
-    "prettysize": "0.0.3",
+    "prettysize": "^1.1.0",
     "request": "^2.58.0",
-    "shelljs": "^0.6.0",
-    "spoof": "^1.1.0",
+    "shelljs": "^0.8.2",
+    "spoof": "^2.0.1",
     "zero-fill": "^2.2.1"
   }
 }

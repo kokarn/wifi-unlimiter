@@ -29,7 +29,7 @@ var network;
 var debug = false;
 
 if( process.platform === 'win32' ){
-    var output = shell.exec( 'ipconfig', { silent: true } ).output;
+    var output = shell.exec( 'ipconfig', { silent: true } );
     if( output.indexOf( 'Wireless Network Connection' ) > -1 ){
         device = 'Wireless Network Connection';
     } else if( output.indexOf( 'Wi-Fi' ) > -1 ){
@@ -122,7 +122,7 @@ function getAvailableNetworks( device ){
         networkNames;
 
     if( process.platform === 'win32' ){
-        output = shell.exec( 'netsh wlan show network', { silent: true } ).output;
+        output = shell.exec( 'netsh wlan show network', { silent: true } );
         networks = output.split( '\n' );
         networkNames = [];
 
@@ -133,7 +133,8 @@ function getAvailableNetworks( device ){
             }
         }
     } else {
-        output = shell.exec( PATH_TO_AIRPORT + ' -s', { silent: true } ).output;
+        output = shell.exec( PATH_TO_AIRPORT + ' -s', { silent: true } );
+        console.log( output );
         networks = output.split( '\n' );
         networkNames = [];
 
@@ -170,7 +171,7 @@ function getAvailableNetworks( device ){
 */
 function getCurrentNetworkName( device ){
     if( process.platform === 'win32' ){
-        var output = shell.exec( 'netsh wlan show interface', { silent: true } ).output;
+        var output = shell.exec( 'netsh wlan show interface', { silent: true } );
         var parts = output.split( '\n' );
 
         for( var x = 0; x < parts.length; x = x + 1 ){
@@ -182,7 +183,7 @@ function getCurrentNetworkName( device ){
 
         return false;
     } else {
-        return shell.exec( 'networksetup -getairportnetwork ' + device + ' | cut -c 24-', { silent: true } ).output.trim();
+        return shell.exec( 'networksetup -getairportnetwork ' + device + ' | cut -c 24-', { silent: true } ).trim();
     }
 }
 
@@ -198,7 +199,7 @@ function getWindowsProfiles(){
         return false;
     }
 
-    output = shell.exec( 'netsh wlan show profiles', { silent: true } ).output;
+    output = shell.exec( 'netsh wlan show profiles', { silent: true } );
     lines = output.split( '\n' );
 
     for( var i = 0; i < lines.length; i = i + 1 ){
@@ -260,7 +261,7 @@ function refreshMac( device ){
         throwError( new Error( 'Could not find device for ' + device ) );
     }
 
-    mac = spoof.random();
+    mac = spoof.randomize();
     setMACAddress( it.device, mac, it.port );
 
     connectToNetwork( device );
