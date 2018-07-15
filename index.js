@@ -134,7 +134,6 @@ function getAvailableNetworks( device ){
         }
     } else {
         output = shell.exec( PATH_TO_AIRPORT + ' -s', { silent: true } );
-        console.log( output );
         networks = output.split( '\n' );
         networkNames = [];
 
