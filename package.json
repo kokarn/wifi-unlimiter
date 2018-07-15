@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo \"Run node index.js with elevated privileges\""
   },
   "author": "Oskar Risberg <kokarn@gmail.com>",
   "license": "MIT",
