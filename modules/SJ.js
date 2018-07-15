@@ -1,6 +1,6 @@
 'use strict';
 
-// Example response
+// Example response version 1.6
 /*
 data({
     "version":"1.6",
@@ -20,6 +20,29 @@ data({
     "data_total_limit":"209715200",
     "bandwidth_download_limit":"0",
     "bandwidth_upload_limit":"0"
+});
+*/
+// Example response version 1.9
+/*
+d({
+    "version":"1.9",
+    "ip":"10.101.2.179",
+    "mac":"00:0F:4B:42:06:96",
+    "online":"0",
+    "timeleft":"0",
+    "authenticated":"1",
+    "userclass":"2",
+    "expires":"Never",
+    "timeused":"337",
+    "data_download_used":"30602906",
+    "data_upload_used":"1415248",
+    "data_total_used":"32018154",
+    "data_download_limit":"0",
+    "data_upload_limit":"0",
+    "data_total_limit":"209715200",
+    "bandwidth_download_limit":"0",
+    "bandwidth_upload_limit":"0",
+    "cap_level":"0"
 });
 */
 
